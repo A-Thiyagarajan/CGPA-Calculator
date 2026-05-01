@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>📊 CGPA Calculator</h1>
+                <p class="subtitle">Calculate your Cumulative Grade Point Average</p>
+            </div>
+
+            <div class="calculator-section">
+                <!-- Previous Semester Data -->
+                <div class="previous-data-section">
+                    <h3>📚 Previous Semester Data (Optional)</h3>
+                    <div class="previous-data-grid">
+<div class="form-group">
+                            <label for="previousCGPA">Previous CGPA</label>
+                            <input 
+                                type="number" 
+                                id="previousCGPA"
+                                value="0"
+                                placeholder="0.00"
+                                min="0"
+                                max="10"
+                                step="0.01"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="previousCredits">Previous Total Credits</label>
+                            <input 
+                                type="number" 
+                                id="previousCredits"
+                                value="0"
+                                placeholder="0"
+                                min="0"
+                                step="0.5"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Semester Subjects -->
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">📝 Current Semester Subjects</h3>
+                <div id="subjectsContainer" class="subjects-container">
+                    <!-- Subject cards will be dynamically added here -->
+                </div>
+
+                <!-- Add Subject Button -->
+                <div class="button-group">
+                    <button class="btn btn-add" onclick="addSubject()">
+                        <span class="plus-icon">+</span> Add Subject
+                    </button>
+                    <button class="btn btn-calculate" onclick="updateCalculation()">
+                        <span>🧮</span> Calculate GPA
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <div class="result-card">
+                    <div class="result-item">
+                        <span class="result-label">Current Semester Credits:</span>
+                        <span id="totalCredits" class="result-value">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Current Weighted Points:</span>
+                        <span id="totalWeightedGrade" class="result-value">0.00</span>
+                    </div>
+                </div>
+
+                <div class="gpa-display-grid">
+                    <div class="gpa-card">
+                        <div class="gpa-label">Semester GPA</div>
+                        <div id="semesterGPA" class="gpa-value">0.00</div>
+                        <div class="gpa-subtext">Current Term</div>
+                    </div>
+                    <div class="gpa-card cumulative">
+                        <div class="gpa-label">Cumulative GPA</div>
+                        <div id="cumulativeGPA" class="gpa-value">0.00</div>
+                        <div class="gpa-subtext">All Semesters</div>
+                    </div>
+                </div>
+
+                <div class="cumulative-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Previous Credits:</span>
+                        <span id="displayPreviousCredits" class="detail-value">0</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Previous CGPA:</span>
+                        <span id="displayPreviousCGPA" class="detail-value">0.00</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Total Credits:</span>
+                        <span id="totalAllCredits" class="detail-value">0</span>
+                    </div>
+                </div>
+
+                <!-- Grade Info -->
+                <div class="grade-info">
+                    <div class="info-item">
+                        <span class="info-label">GPA Range:</span>
+                        <span class="info-value">0.0 - 10.0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Excellent:</span>
+                        <span class="info-value" style="color: #27ae60;">9.0 - 10.0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Good:</span>
+                        <span class="info-value" style="color: #3498db;">7.0 - 8.9</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Average:</span>
+                        <span class="info-value" style="color: #f39c12;">5.0 - 6.9</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="resetCalculator()">Reset All</button>
+                <button class="btn btn-primary" onclick="downloadReport()">Download Report</button>
+            </div>
+
+            <!-- Grade Scale Reference -->
+            <div class="grade-scale">
+                <h3>Grade Scale Reference</h3>
+                <div class="scale-grid">
+                    <div class="scale-item">
+                        <span class="grade-badge">O</span>
+                        <span class="grade-points">10 Points</span>
+                    </div>
+                    <div class="scale-item">
+                        <span class="grade-badge">A+</span>
+                        <span class="grade-points">9 Points</span>
+                    </div>
+                    <div class="scale-item">
+                        <span class="grade-badge">A</span>
+                        <span class="grade-points">8 Points</span>
+                    </div>
+                    <div class="scale-item">
+                        <span class="grade-badge">B+</span>
+                        <span class="grade-points">7 Points</span>
+                    </div>
+                    <div class="scale-item">
+                        <span class="grade-badge">B</span>
+                        <span class="grade-points">6 Points</span>
+                    </div>
+                    <div class="scale-item">
+                        <span class="grade-badge">C</span>
+                        <span class="grade-points">5 Points</span>
+                    </div>
+                    <div class="scale-item">
+                        <span class="grade-badge fail">U</span>
+                        <span class="grade-points">0 Points</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
