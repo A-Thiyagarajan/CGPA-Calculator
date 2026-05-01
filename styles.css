@@ -79,12 +79,121 @@ body {
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 25px;
+    text-align: center;
+}
+
+.previous-data-section .btn-toggle {
+    width: 100%;
+    margin: 0;
 }
 
 .previous-data-section h3 {
     color: var(--text-dark);
     margin-bottom: 15px;
     font-size: 1.05em;
+}
+
+/* Toggle Button */
+.previous-semesters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Previous Semester Card */
+.previous-semester-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr auto;
+    gap: 15px;
+    align-items: end;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.semester-label {
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 1.1em;
+    text-align: center;
+    padding: 10px 0;
+}
+
+@media (max-width: 768px) {
+    .previous-semester-card {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+
+.btn-toggle {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    font-size: 1.05em;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-toggle.active {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.previous-data-content {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border-color);
+}
+
+/* Result Message with Emoji */
+.result-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    animation: slideIn 0.5s ease-out;
+}
+
+.message-emoji {
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    animation: bounce 0.6s ease-out;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.message-text {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--primary-color);
 }
 
 .previous-data-grid {
@@ -578,4 +687,192 @@ body {
 .empty-state p {
     font-size: 1.1em;
     margin-bottom: 10px;
+}
+
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .card {
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
+    
+    .header {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+    }
+    
+    .header h1 {
+        font-size: 1.6em;
+    }
+    
+    .subtitle {
+        font-size: 0.9em;
+    }
+    
+    .calculator-section {
+        margin-bottom: 25px;
+    }
+    
+    .previous-data-section {
+        padding: 15px;
+    }
+    
+    .btn-toggle {
+        padding: 12px 15px;
+        font-size: 1em;
+    }
+    
+    .subject-card {
+        padding: 15px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        padding: 8px 10px;
+        font-size: 0.95em;
+    }
+    
+    .btn-remove {
+        padding: 6px 12px;
+        font-size: 0.85em;
+    }
+    
+    .button-group {
+        gap: 8px;
+    }
+    
+    .btn {
+        padding: 10px 18px;
+        font-size: 0.95em;
+    }
+    
+    .results-section {
+        padding: 20px 15px;
+    }
+    
+    .result-card {
+        padding: 15px;
+    }
+    
+    .gpa-card {
+        padding: 20px 15px;
+    }
+    
+    .gpa-value {
+        font-size: 2em;
+    }
+    
+    .cumulative-details {
+        padding: 15px;
+    }
+    
+    .detail-row {
+        padding: 10px;
+    }
+    
+    .grade-info {
+        padding: 12px;
+    }
+    
+    .action-buttons {
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .grade-scale {
+        padding: 20px 15px;
+        margin-top: 20px;
+    }
+    
+    .scale-grid {
+        gap: 10px;
+    }
+    
+    .scale-item {
+        padding: 12px;
+    }
+    
+    .grade-badge {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1em;
+    }
+    
+    .message-emoji {
+        font-size: 2.5em;
+    }
+    
+    .message-text {
+        font-size: 1.1em;
+    }
+}
+
+/* Card full width on mobile */
+@media (max-width: 600px) {
+    .container {
+        max-width: 100%;
+    }
+    
+    .card {
+        width: 100%;
+    }
+    
+    .subject-card {
+        width: 100%;
+    }
+    
+    .gpa-card {
+        width: 100%;
+    }
+    
+    .result-card {
+        width: 100%;
+    }
+    
+    .detail-row {
+        width: 100%;
+    }
+}
+
+/* Better card appearances */
+.subject-card,
+.gpa-card,
+.result-card,
+.detail-row {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Improved touch targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+    .btn,
+    .btn-toggle,
+    .btn-remove {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        min-height: 44px;
+    }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+    .container {
+        max-width: 100%;
+    }
+    
+    .header {
+        margin-bottom: 20px;
+    }
+    
+    .subjects-container {
+        max-height: 200px;
+    }
 }

@@ -12,6 +12,149 @@ const gradePoints = {
 // Subjects array to store subject data
 let subjects = [];
 
+// Previous semester data array
+let previousSemesters = [];
+
+/**
+ * Add a new previous semester data set
+ */
+function addPreviousSemesterSet() {
+    const setId = Date.now();
+    const newSet = {
+        id: setId,
+        cgpa: '',
+        credits: ''
+    };
+
+    previousSemesters.push(newSet);
+    renderPreviousSemesters();
+}
+
+/**
+ * Remove a previous semester data set
+ */
+function removePreviousSemesterSet(id) {
+    previousSemesters = previousSemesters.filter(s => s.id !== id);
+    renderPreviousSemesters();
+}
+
+/**
+ * Update previous semester data
+ */
+function updatePreviousSemester(id, field, value) {
+    const set = previousSemesters.find(s => s.id === id);
+    if (set) {
+        set[field] = value;
+    }
+}
+
+/**
+ * Render all previous semester data sets
+ */
+function renderPreviousSemesters() {
+    const container = document.getElementById('previousSemestersContainer');
+
+    if (previousSemesters.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+
+    container.innerHTML = previousSemesters
+        .map(set => createPreviousSemesterCard(set))
+        .join('');
+}
+
+/**
+ * Create HTML for a previous semester card
+ */
+function createPreviousSemesterCard(set) {
+    const index = previousSemesters.indexOf(set) + 1;
+    return `
+        <div class="previous-semester-card" id="prevSet-${set.id}">
+            <div class="semester-label">Semester ${index}</div>
+            <div class="previous-data-grid">
+                <div class="form-group">
+                    <label for="prevCGPA-${set.id}">Previous CGPA</label>
+                    <input 
+                        type="number" 
+                        id="prevCGPA-${set.id}"
+                        value="${set.cgpa}"
+                        placeholder="Enter CGPA (0.00 - 10.00)"
+                        min="0"
+                        max="10"
+                        step="0.01"
+                        onchange="updatePreviousSemester(${set.id}, 'cgpa', this.value)"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="prevCredits-${set.id}">Previous Total Credits</label>
+                    <input 
+                        type="number" 
+                        id="prevCredits-${set.id}"
+                        value="${set.credits}"
+                        placeholder="Enter credits earned"
+                        min="0"
+                        step="0.5"
+                        onchange="updatePreviousSemester(${set.id}, 'credits', this.value)"
+                    />
+                </div>
+            </div>
+            <button 
+                class="btn-remove" 
+                onclick="removePreviousSemesterSet(${set.id})"
+                title="Remove this semester"
+            >
+                Remove
+            </button>
+        </div>
+    `;
+}
+
+/**
+ * Show result message with emoji based on GPA
+ */
+function showResultMessage(gpa) {
+    const resultMessage = document.getElementById('resultMessage');
+    const messageEmoji = document.getElementById('messageEmoji');
+    const messageText = document.getElementById('messageText');
+    
+    if (gpa === 0) {
+        resultMessage.style.display = 'none';
+        return;
+    }
+    
+    let emoji = '';
+    let text = '';
+    let color = '';
+    
+    if (gpa >= 9.0 && gpa <= 10.0) {
+        emoji = '🏆';
+        text = 'Outstanding Performance! You\'re a Star! 🌟';
+        color = '#27ae60';
+    } else if (gpa >= 7.0 && gpa < 9.0) {
+        emoji = '😊';
+        text = 'Great Job! Keep Up the Good Work! 👍';
+        color = '#3498db';
+    } else if (gpa >= 5.0 && gpa < 7.0) {
+        emoji = '👍';
+        text = 'Good Effort! You Can Do Even Better! 💪';
+        color = '#f39c12';
+    } else if (gpa >= 3.0 && gpa < 5.0) {
+        emoji = '📚';
+        text = 'Needs Improvement. Keep Trying! 🔥';
+        color = '#e74c3c';
+    } else if (gpa > 0 && gpa < 3.0) {
+        emoji = '💪';
+        text = 'Don\'t Give Up! Better Days Ahead! ✨';
+        color = '#c0392b';
+    }
+    
+    messageEmoji.textContent = emoji;
+    messageText.textContent = text;
+    messageText.style.color = color;
+    resultMessage.style.display = 'flex';
+}
+
 /**
  * Add a new subject to the calculator
  */
@@ -165,10 +308,28 @@ function calculateCGPA() {
  * Calculate cumulative GPA including previous semester data
  */
 function calculateCumulativeGPA() {
-    const previousCGPA = parseFloat(document.getElementById('previousCGPA').value) || 0;
-    const previousCredits = parseFloat(document.getElementById('previousCredits').value) || 0;
+    // Calculate from multiple previous semester sets
+    let totalPreviousCredits = 0;
+    let totalPreviousWeightedGrade = 0;
+    let allPreviousCGPA = 0;
+    
+    // Process all previous semester data
+    previousSemesters.forEach(set => {
+        const cgpa = parseFloat(set.cgpa) || 0;
+        const credits = parseFloat(set.credits) || 0;
+        
+        if (credits > 0) {
+            totalPreviousCredits += credits;
+            totalPreviousWeightedGrade += (cgpa * credits);
+        }
+    });
+    
+    // Calculate average previous CGPA if we have previous semesters
+    if (totalPreviousCredits > 0) {
+        allPreviousCGPA = totalPreviousWeightedGrade / totalPreviousCredits;
+    }
 
-    // Get current semester GPA
+    // Get current semester data
     let currentCredits = 0;
     let currentWeightedGrade = 0;
 
@@ -181,20 +342,19 @@ function calculateCumulativeGPA() {
     });
 
     // Calculate total credits and cumulative GPA
-    let totalCredits = previousCredits + currentCredits;
+    let totalCredits = totalPreviousCredits + currentCredits;
     let cumulativeGPA = 0;
 
     if (totalCredits > 0) {
-        const previousWeightedGrade = previousCGPA * previousCredits;
-        const totalWeightedGrade = previousWeightedGrade + currentWeightedGrade;
+        const totalWeightedGrade = totalPreviousWeightedGrade + currentWeightedGrade;
         cumulativeGPA = totalWeightedGrade / totalCredits;
     }
 
     // Update cumulative GPA display
     document.getElementById('cumulativeGPA').textContent = cumulativeGPA.toFixed(2);
     document.getElementById('totalAllCredits').textContent = totalCredits.toFixed(2);
-    document.getElementById('displayPreviousCGPA').textContent = previousCGPA.toFixed(2);
-    document.getElementById('displayPreviousCredits').textContent = previousCredits.toFixed(2);
+    document.getElementById('displayPreviousCGPA').textContent = allPreviousCGPA.toFixed(2);
+    document.getElementById('displayPreviousCredits').textContent = totalPreviousCredits.toFixed(2);
 
     return cumulativeGPA;
 }
@@ -203,26 +363,31 @@ function calculateCumulativeGPA() {
  * Update all calculations (called when data changes)
  */
 function updateCalculation() {
-    calculateCGPA();
-    calculateCumulativeGPA();
+    const semesterGPA = calculateCGPA();
+    const cumulativeGPA = calculateCumulativeGPA();
+    
+    // Show result message with emoji based on cumulative GPA
+    showResultMessage(cumulativeGPA);
 }
 
 /**
  * Reset the calculator
  */
 function resetCalculator() {
-    if (subjects.length === 0 && 
-        (parseFloat(document.getElementById('previousCGPA').value) || 0) === 0 &&
-        (parseFloat(document.getElementById('previousCredits').value) || 0) === 0) {
+    if (subjects.length === 0 && previousSemesters.length === 0) {
         alert('No data to reset!');
         return;
     }
 
     if (confirm('Are you sure you want to reset all subjects and previous semester data? This action cannot be undone.')) {
         subjects = [];
-        document.getElementById('previousCGPA').value = '0';
-        document.getElementById('previousCredits').value = '0';
+        previousSemesters = [];
+        
+        // Hide result message
+        document.getElementById('resultMessage').style.display = 'none';
+        
         renderSubjects();
+        renderPreviousSemesters();
     }
 }
 
@@ -230,8 +395,8 @@ function resetCalculator() {
  * Download the CGPA report as a text file
  */
 function downloadReport() {
-    if (subjects.length === 0) {
-        alert('Please add at least one subject to download a report.');
+    if (subjects.length === 0 && previousSemesters.length === 0) {
+        alert('Please add at least one subject or previous semester data to download a report.');
         return;
     }
 
@@ -257,8 +422,20 @@ Current Semester Credits: ${totalCredits}
 ---
 Cumulative GPA: ${cumulativeGPA}
 Total Credits: ${totalAllCredits}
+`;
 
-CURRENT SEMESTER BREAKDOWN
+    // Add previous semesters section if exists
+    if (previousSemesters.length > 0) {
+        reportContent += `\nPREVIOUS SEMESTERS BREAKDOWN
+--------------------------`;
+        previousSemesters.forEach((set, index) => {
+            const cgpa = set.cgpa || '0';
+            const credits = set.credits || '0';
+            reportContent += `\nSemester ${index + 1}: CGPA ${cgpa}, Credits ${credits}`;
+        });
+    }
+
+    reportContent += `\n\nCURRENT SEMESTER BREAKDOWN
 --------------------------
 Total Credits: ${totalCredits}
 Total Weighted Grade Points: ${totalWeightedGrade}
