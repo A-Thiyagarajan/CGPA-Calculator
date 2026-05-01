@@ -163,7 +163,7 @@ function addSubject() {
     const newSubject = {
         id: subjectId,
         name: '',
-        credits: 0,
+        credits: '',
         grade: 'O'
     };
 
